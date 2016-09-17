@@ -6,6 +6,7 @@ import com.w6.data.Article;
 import com.w6.data.Event;
 import com.w6.nlp.Parser;
 import com.w6.nlp.MySolrClient;
+import com.w6.services.appearance.SummuryPreparator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -171,6 +172,8 @@ public class EndpointController {
         String yearNumber = dateNames[0];
         String monthString = new DateFormatSymbols(Locale.ENGLISH).getMonths()[Integer.valueOf(dateNames[1])-1];
         
+        
+        
         for (Event event: eventsInRange)
         {
             break;
@@ -184,6 +187,8 @@ public class EndpointController {
             
         modelAndView.addObject("year", yearNumber);
         modelAndView.addObject("month", monthString);
+        modelAndView.addObject("monthNum", Integer.valueOf(dateNames[1]) - 1);
+        modelAndView.addObject("summary", SummuryPreparator.makeSummary(eventsInRange));
         return modelAndView;
     }  
     

@@ -8,13 +8,59 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    
+    <script type="text/javascript" src="scripts/canvasjs.min.js"></script>
+    <!--<script src="scripts/report-page.js"></script>-->
+    
+     <script type="text/javascript">
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer",
+                    {
+                        theme: "theme2",
+                        title:{
+                            text: "Number of Events"
+                        },
+                        animationEnabled: true,
+                        axisX: {
+                            valueFormatString: "D",
+                            interval:1,
+                            intervalType: "day"
 
+                        },
+                        axisY:{
+                            includeZero: false,
+                            interval:1
+                        },
+                        data: [
+                            {
+                                type: "line",
+                                lineThickness: 3,
+                                dataPoints: [
+                                    <c:forEach items="${summary}" var="event">          
+                                         { x: new Date(${year}, ${monthNum}, ${event.day}), y: ${event.value}, 
+                                         <c:choose>
+                                            <c:when test="${event.dayType == 'worstDay'}">
+                                                indexLabel: "worst day",markerColor: "red", markerType: "triangle"}
+                                            </c:when>    
+                                            <c:otherwise>
+                                                }
+                                            </c:otherwise>
+                                        </c:choose>
+                                            ,
+                                    </c:forEach>
+                                ]
+                            }
+
+
+                        ]
+                    });
+
+            chart.render();
+        }
+    </script>
+    
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">-->
     <link rel="stylesheet" href="css/report.css">
-    <!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
-    <!--<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
-
 
 </head>
 
@@ -45,7 +91,7 @@
                             ${event.description}
                         </a>
                         <div class="row" style = "margin-top: 15px">
-                            <div class="col-md-6"><strong>Time: </strong>${event.date}</div>
+                            <div class="col-md-6"><strong>Time: </strong>${event.calendar.time}</div>
                             <div class="col-md-6 text-right"><strong>Country/Region: 
                                 </strong>${event.country}/${event.region}</div>
                         </div>
@@ -59,6 +105,8 @@
                 </c:forEach>
                 <div class="bs-callout bs-callout-danger">
                         <h4>Summary on ${year} ${month}</h4>
+                        <div id="chartContainer" style="height: 300px; width: 100%;">
+                        </div>
                         <table class="table table-striped table-responsive ">
                             <tbody>
                             <tr>
